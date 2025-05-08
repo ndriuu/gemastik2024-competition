@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:firestore/service/database.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -16,7 +17,7 @@ class _detailsState extends State<details> {
   TextEditingController namecontroller = new TextEditingController();
   TextEditingController agecontroller = new TextEditingController();
   TextEditingController locationcontroller = new TextEditingController();
-
+  bool isANumber = true;
   Widget Details(){
     CollectionReference users = FirebaseFirestore.instance.collection('Employee');
     return FutureBuilder<DocumentSnapshot>(
@@ -49,6 +50,9 @@ class _detailsState extends State<details> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    Container(
+                      
+                    ),
                     Text(
                       "Name : "+data["Name"],
                       style: TextStyle(
@@ -108,7 +112,7 @@ class _detailsState extends State<details> {
           );
         }
 
-        return Text("loading");
+        return Text("");
       },
     );
   }
@@ -160,117 +164,127 @@ class _detailsState extends State<details> {
 
     );
   }
+  final GlobalKey<FormState> _formKey = GlobalKey();
   Future EditEmployeeDetail(String id)=> showDialog(context: context, builder: (context)=> AlertDialog(
-    content: Container(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              GestureDetector(
-                onTap: (){
-                  Navigator.pop(context);
-                },
-                child: Icon(Icons.cancel),
-              ),
-              SizedBox(width: 60.0,),
-              Text(
-                "Edit",
-                style: TextStyle(
-                    color: Colors.blue,
-                    fontSize: 24.0,
-                    fontWeight: FontWeight.bold
+    backgroundColor: Colors.white,
+    content: SingleChildScrollView(
+      child: Container(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                GestureDetector(
+                  onTap: (){
+                    Navigator.pop(context);
+                  },
+                  child: Icon(Icons.cancel),
                 ),
-              ),
-              Text(
-                "Details",
-                style: TextStyle(
-                    color: Colors.orange,
-                    fontSize: 24.0,
-                    fontWeight: FontWeight.bold
+                SizedBox(width: 60.0,),
+                Text(
+                  "Edit",
+                  style: TextStyle(
+                      color: Colors.blue,
+                      fontSize: 24.0,
+                      fontWeight: FontWeight.bold
+                  ),
                 ),
+                Text(
+                  "Details",
+                  style: TextStyle(
+                      color: Colors.orange,
+                      fontSize: 24.0,
+                      fontWeight: FontWeight.bold
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 20.0,),
+            Form(
+              key: _formKey,
+              child: Column(
+                children:[
+                  SizedBox(
+                    height: 10.0,
+                  ),
+                  TextFormField(
+                    validator: (value) {
+                      if (value != null && value.trim().length < 1) {
+                        return 'This field needs to be filled';
+                      }
+                      return null;
+                    },
+
+                    controller: namecontroller,
+                    decoration: InputDecoration(
+                      labelText: "Name",
+                      border: OutlineInputBorder(),
+                      errorBorder: UnderlineInputBorder(),
+
+                    )
+                  ),
+                  const SizedBox(
+                    height: 20.0,
+                  ),
+                  TextFormField(
+                      validator: (value) {
+                        if (value != null && value.trim().length < 1) {
+                          return 'This field needs to be filled';
+                        }
+                        return null;
+                      },
+
+                      controller: agecontroller,
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                        labelText: "Age",
+                        border: OutlineInputBorder(),
+                        errorBorder: UnderlineInputBorder(),
+
+                      )
+                  ),
+                  const SizedBox(
+                    height: 20.0,
+                  ),
+                  TextFormField(
+                      validator: (value) {
+                        if (value != null && value.trim().length < 1) {
+                          return 'This field needs to be filled';
+                        }
+                        return null;
+                      },
+
+                      controller: locationcontroller,
+                      decoration: InputDecoration(
+                        labelText: "Location",
+                        border: OutlineInputBorder(),
+                        errorBorder: UnderlineInputBorder(),
+
+                      )
+                  ),
+                ],
               ),
-            ],
-          ),
-          SizedBox(height: 20.0,),
-          Text(
-            "Name",
-            style: TextStyle(
-                color: Colors.black,
-                fontSize: 20.0,
-                fontWeight: FontWeight.bold
             ),
-          ),
-          SizedBox(
-            height: 10.0,
-          ),
-          Container(
-            padding: EdgeInsets.only(left: 10.0),
-            decoration: BoxDecoration(
-                border: Border.all(),
-                borderRadius: BorderRadius.circular(10)
-            ),
-            child: TextField(
-              controller: namecontroller,
-              decoration: InputDecoration(border: InputBorder.none),
-            ),
-          ),
-          SizedBox(height: 20.0,),
-          Text(
-            "Age",
-            style: TextStyle(
-                color: Colors.black,
-                fontSize: 20.0,
-                fontWeight: FontWeight.bold
-            ),
-          ),
-          SizedBox(height: 10.0,),
-          Container(
-            padding: EdgeInsets.only(left: 10.0),
-            decoration: BoxDecoration(
-                border: Border.all(),
-                borderRadius: BorderRadius.circular(10)
-            ),
-            child: TextField(
-              controller: agecontroller,
-              decoration: InputDecoration(border: InputBorder.none),
-            ),
-          ),
-          SizedBox(height: 20.0,),
-          Text(
-            "Location",
-            style: TextStyle(
-                color: Colors.black,
-                fontSize: 20.0,
-                fontWeight: FontWeight.bold
-            ),
-          ),
-          SizedBox(height: 10.0,),
-          Container(
-            padding: EdgeInsets.only(left: 10.0),
-            decoration: BoxDecoration(
-                border: Border.all(),
-                borderRadius: BorderRadius.circular(10)
-            ),
-            child: TextField(
-              controller: locationcontroller,
-              decoration: InputDecoration(border: InputBorder.none),
-            ),
-          ),
-          SizedBox(height: 30.0,),
-          Center(child: ElevatedButton(onPressed: () async{
-            Map<String, dynamic>updateInfo={
-              "Name": namecontroller.text,
-              "Age": agecontroller.text,
-              "Id": id,
-              "Location": locationcontroller.text,
-            };
-            await DatabaseMethods().updateEmployeeDetail(id, updateInfo).then((value){
-              Navigator.pop(context);
-              setState(() {});
-            });
-          }, child: Text("Update")))
-        ],
+            Center(
+                child: ElevatedButton(onPressed: () async{
+                  if (_formKey.currentState!.validate()) {
+                    if (kDebugMode) {
+                      Map<String, dynamic>updateInfo={
+                        "Name": namecontroller.text,
+                        "Age": agecontroller.text,
+                        "Id": id,
+                        "Location": locationcontroller.text,
+                      };
+                      await DatabaseMethods().updateEmployeeDetail(id, updateInfo).then((value){
+                        Navigator.pop(context);
+                        setState(() {});
+                      });
+                    }
+                    // And do something here
+                  }
+                  }, child: Text("Update")))
+          ],
+        ),
       ),
     ),
   ));
